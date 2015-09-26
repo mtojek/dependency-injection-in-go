@@ -9,6 +9,7 @@ go-get:
 	go get github.com/opennota/check/cmd/defercheck
 	go get github.com/opennota/check/cmd/structcheck
 	go get github.com/opennota/check/cmd/varcheck
+	go get github.com/stretchr/testify
 
 install:
 	go get -t -v ./...
