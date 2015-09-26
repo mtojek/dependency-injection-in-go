@@ -10,6 +10,7 @@ func newBook(name string) shared.Book {
 	return &book{name: name}
 }
 
+// Name method returns book name.
 func (b *book) Name() string {
 	return b.name
 }

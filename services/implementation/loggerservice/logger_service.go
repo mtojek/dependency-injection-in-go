@@ -2,12 +2,12 @@ package loggerservice
 
 import "log"
 
-type LoggerService struct{}
+type loggerService struct{}
 
-func (l *LoggerService) Info(message string, values ...interface{}) {
+func (l *loggerService) Info(message string, values ...interface{}) {
 	log.Printf("[INFO]  "+message+"\n", values...)
 }
 
-func (l *LoggerService) Debug(message string, values ...interface{}) {
+func (l *loggerService) Debug(message string, values ...interface{}) {
 	log.Printf("[DEBUG] "+message+"\n", values...)
 }

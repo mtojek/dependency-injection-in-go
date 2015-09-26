@@ -13,11 +13,12 @@ var (
 )
 
 func newBookService() interfaces.BookService {
-	return &BookService{
+	return &bookService{
 		loggerService: loggerservice.Instance(),
 	}
 }
 
+// Instance method returns a singleton instance of BookService.
 func Instance() interfaces.BookService {
 	once.Do(func() {
 		instance = newBookService()

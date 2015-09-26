@@ -12,9 +12,10 @@ var (
 )
 
 func newLoggerService() interfaces.LoggerService {
-	return new(LoggerService)
+	return new(loggerService)
 }
 
+// Instance method returns a singleton instance of LoggerService.
 func Instance() interfaces.LoggerService {
 	once.Do(func() {
 		instance = newLoggerService()

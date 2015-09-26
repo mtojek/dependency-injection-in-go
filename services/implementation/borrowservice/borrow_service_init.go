@@ -13,11 +13,12 @@ var (
 )
 
 func newBorrowService() interfaces.BorrowService {
-	return &BorrowService{
+	return &borrowService{
 		loggerService: loggerservice.Instance(),
 	}
 }
 
+// Instance method returns a singleton instance of BorrowService.
 func Instance() interfaces.BorrowService {
 	once.Do(func() {
 		instance = newBorrowService()
