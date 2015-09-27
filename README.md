@@ -1,5 +1,7 @@
 # Dependency Injection in Go
 
+[![Build Status](https://travis-ci.org/mtojek/dependency-injection-in-go.svg?branch=master)](https://travis-ci.org/mtojek/dependency-injection-in-go)
+
 This project shows how to solve (DIY) a dependency injection problem in Go.
 
 Keywords: dependency injection, inject, injector, DIY
@@ -23,7 +25,7 @@ The application has a separated "services" package, which contains two another p
 
 I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles.
 
-### BookService - Sample Service
+### BookService - Single Instance
 
 Package: `bookservice`
 
@@ -63,7 +65,7 @@ func (b *bookService) CreateBook(title string) shared.Book {
 }
 ~~~
 
-One may say that having interfaces causes writing more code. Actually it supports testing, because it allows mocking services:
+One may say that having interfaces here forces to write more code. Actually it supports testing, because it allows mocking services:
 
 ~~~ go
 func TestCreateBook(t *testing.T) {
@@ -81,4 +83,19 @@ func TestCreateBook(t *testing.T) {
 }
 ~~~
 
+### BorrowingFormatter - New Instance
+
+In some situations it is useful to always inject a new instance of service. If a service wants to inject a new instance of `BorrowingFormatter` it should call `borrowingformatter.New()` method:
+
+~~~ go
+// Borrow method is responsible for borrowing book by user.
+func (b *borrowService) Borrow(user shared.User, book shared.Book) {
+	formatter := borrowingformatter.New()
+	formatted := formatter.Format(user, book)
+
+	b.loggerService.Info(formatted)
+}
+~~~
+
+Hint: for testing purposes I recommend to prepare a "new instance provider", which can produce any mocked instance we want. The provider pattern is not applied to this project.
 
