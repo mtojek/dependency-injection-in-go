@@ -9,7 +9,7 @@ type bookService struct {
 	loggerService interfaces.LoggerService
 }
 
-func (b *bookService) CreateBook(name string) shared.Book {
-	b.loggerService.Info("New book created: %v", name)
-	return newBook(name)
+func (b *bookService) CreateBook(title string) shared.Book {
+	b.loggerService.Info("New book created: %v", title)
+	return newBook(title)
 }
