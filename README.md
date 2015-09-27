@@ -23,7 +23,7 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 
 ## Design of the solution
 
-The application has a separated "services" package, which contains two another packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
+The application has a separated "services" package, which contains only two packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
 
 I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles.
 
