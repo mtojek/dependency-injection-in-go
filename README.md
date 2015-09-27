@@ -10,11 +10,15 @@ Dependency injection seems to be a key factor to write a DRI code, especially wh
 
 The way I figured this out, is presented in a "proof of concept" simple project. I tried to eliminate as much of not related to DI source code, thus sometimes you may wonder if this simplicity really needs a DI pattern.
 
-## User stories
+## User Stories
 
 * There is a library in which a user can borrow a book.
 * The user has name
 * The book has a title
 * The user can borrow a book.
 
-## Solution Design
+## Design of the Solution
+
+The application has a separated "services" package, which contains two another packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
+
+### BookService
