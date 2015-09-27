@@ -1,8 +1,8 @@
 # Dependency Injection in Go
 
-This project shows how to solve a a dependency injection problem in Go.
+This project shows how to solve (DIY) a dependency injection problem in Go.
 
-Keywords: dependency injection, inject, injector, gin
+Keywords: dependency injection, inject, injector, DIY
 
 ## Introduction
 
@@ -21,4 +21,33 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 
 The application has a separated "services" package, which contains two another packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
 
-### BookService
+I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service.
+
+### BookService - Sample Service
+
+Package: `bookservice`
+
+The initialization part has been separated because of SRP (Single Responsibility Pattern). All initialization operations have been moved to a file called `book_service_init.go`. When a client service requests an instance of `BookService` it should call the `bookservice.Instance()` method. The instance will lazily created if necessary:
+
+~~~ go
+var (
+	once     sync.Once
+	instance interfaces.BorrowService
+)
+
+func newBorrowService() interfaces.BorrowService {
+	return &borrowService{
+		loggerService: loggerservice.Instance(),
+	}
+}
+
+// Instance method returns a singleton instance of BorrowService.
+func Instance() interfaces.BorrowService {
+	once.Do(func() {
+		instance = newBorrowService()
+	})
+	return instance
+}
+~~~
+
+### 
