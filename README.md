@@ -4,6 +4,8 @@
 
 This project shows how to solve (DIY) a dependency injection problem in Go.
 
+Status: **Done**
+
 Keywords: dependency injection, inject, injector, DIY
 
 ## Introduction
