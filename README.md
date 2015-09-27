@@ -12,7 +12,7 @@ Dependency injection seems to be a key factor to write a DRI code, especially wh
 
 The way I figured this out, is presented in a "proof of concept" simple project. I tried to eliminate as much of not related to DI source code, thus sometimes you may wonder if this simplicity really needs a DI pattern.
 
-## User Stories
+## User stories
 
 * There is a library in which a user can borrow a book.
 * The user has name
@@ -25,7 +25,7 @@ The application has a separated "services" package, which contains two another p
 
 I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles.
 
-### BookService - Single Instance
+### BookService - single instance
 
 Package: `bookservice`
 
@@ -83,7 +83,7 @@ func TestCreateBook(t *testing.T) {
 }
 ~~~
 
-### BorrowingFormatter - New Instance
+### BorrowingFormatter - new instance
 
 In some situations it is useful to always inject a new instance of service. If a service wants to inject a new instance of `BorrowingFormatter` it should call `borrowingformatter.New()` method:
 
