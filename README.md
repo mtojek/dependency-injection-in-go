@@ -19,7 +19,7 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 * The book has a title
 * The user can borrow a book.
 
-## Design of the Solution
+## Design of the solution
 
 The application has a separated "services" package, which contains two another packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
 
