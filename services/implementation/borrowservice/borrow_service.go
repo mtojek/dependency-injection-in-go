@@ -13,7 +13,7 @@ type borrowService struct {
 // Borrow method is responsible for borrowing book by user.
 func (b *borrowService) Borrow(user shared.User, book shared.Book) {
 	formatter := borrowingformatter.New()
-	formatter.SetUser(user)
-	formatter.SetBook(book)
-	b.loggerService.Info(formatter.Format())
+	formatted := formatter.Format(user, book)
+
+	b.loggerService.Info(formatted)
 }
