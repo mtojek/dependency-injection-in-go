@@ -21,7 +21,7 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 
 The application has a separated "services" package, which contains two another packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
 
-I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service.
+I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles.
 
 ### BookService - Sample Service
 
@@ -32,22 +32,53 @@ The initialization part has been separated because of SRP (Single Responsibility
 ~~~ go
 var (
 	once     sync.Once
-	instance interfaces.BorrowService
+	instance interfaces.BookService
 )
 
-func newBorrowService() interfaces.BorrowService {
-	return &borrowService{
+func newBookService() interfaces.BookService {
+	return &bookService{
 		loggerService: loggerservice.Instance(),
 	}
 }
 
-// Instance method returns a singleton instance of BorrowService.
-func Instance() interfaces.BorrowService {
+// Instance method returns a singleton instance of BookService.
+func Instance() interfaces.BookService {
 	once.Do(func() {
-		instance = newBorrowService()
+		instance = newBookService()
 	})
 	return instance
 }
 ~~~
 
-### 
+The implementation of `BookService` has been placed in `book_service.go` and contains only business logic and structure representation:
+
+~~~ go
+type bookService struct {
+	loggerService interfaces.LoggerService
+}
+
+func (b *bookService) CreateBook(title string) shared.Book {
+	b.loggerService.Info("New book created: %v", title)
+	return newBook(title)
+}
+~~~
+
+One may say that having interfaces causes writing more code. Actually it supports testing, because it allows mocking services:
+
+~~~ go
+func TestCreateBook(t *testing.T) {
+	assert := assert.New(t)
+
+	// given
+	logger := new(mockedLogger)
+	sut := &bookService{loggerService: logger}
+
+	// when
+	sut.CreateBook("book")
+
+	// then
+	assert.True(logger.invoked, "LoggerService's Info method should be invoked")
+}
+~~~
+
+
