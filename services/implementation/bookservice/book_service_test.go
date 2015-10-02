@@ -11,7 +11,7 @@ func TestCreateBook(t *testing.T) {
 
 	// given
 	logger := new(mockedLogger)
-	sut := &bookService{loggerService: logger}
+	sut := &BookService{logger}
 
 	// when
 	sut.CreateBook("book")

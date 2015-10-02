@@ -5,11 +5,13 @@ import (
 	"github.com/mtojek/dependency-injection-in-go/services/interfaces/shared"
 )
 
-type bookService struct {
-	loggerService interfaces.LoggerService
+// BookService allows to create books.
+type BookService struct {
+	LoggerService interfaces.LoggerService `inject:""`
 }
 
-func (b *bookService) CreateBook(title string) shared.Book {
-	b.loggerService.Info("New book created: %v", title)
+// CreateBook method is responsible for creating new book.
+func (b *BookService) CreateBook(title string) shared.Book {
+	b.LoggerService.Info("New book created: %v", title)
 	return newBook(title)
 }

@@ -6,14 +6,15 @@ import (
 	"github.com/mtojek/dependency-injection-in-go/services/interfaces/shared"
 )
 
-type borrowService struct {
-	loggerService interfaces.LoggerService
+// BorrowService allows to borrow books.
+type BorrowService struct {
+	LoggerService interfaces.LoggerService `inject:""`
 }
 
 // Borrow method is responsible for borrowing book by user.
-func (b *borrowService) Borrow(user shared.User, book shared.Book) {
-	formatter := borrowingformatter.New()
+func (b *BorrowService) Borrow(user shared.User, book shared.Book) {
+	formatter := new(borrowingformatter.BorrowingFormatter)
 	formatted := formatter.Format(user, book)
 
-	b.loggerService.Info(formatted)
+	b.LoggerService.Info(formatted)
 }
