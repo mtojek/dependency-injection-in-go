@@ -29,7 +29,7 @@ I assume that all mentioned services should be stateless, thus they can be repre
 
 ### BookService - Sample Service
 
-As there can be noticed, a logger service will be injected by the graph population (description below). No constructors, special initialization procedures have been used.
+There can be noticed that logger service will be injected by the graph population (description below). No constructors, special initialization procedures have been used.
 
 ~~~ go
 package bookservice
@@ -49,7 +49,7 @@ func (b *BookService) CreateBook(title string) shared.Book {
 
 ~~~
 
-If we use interfaces for injections, there will be a possibility to write some tests, including mocking them externally (exported fields).
+If we use interfaces for injections, there will be a possibility to write some tests, including mocking them externally (exported fields):
 
 ~~~ go
 func TestCreateBook(t *testing.T) {
@@ -67,19 +67,46 @@ func TestCreateBook(t *testing.T) {
 }
 ~~~
 
-### BorrowingFormatter - new instance
+### BorrowingFormatter - New Instance
 
-In some situations it is useful to always inject a new instance of service. If a service wants to inject a new instance of `BorrowingFormatter` it should call `borrowingformatter.New()` method:
+In some situations it is useful to always inject a new instance of service. The [facebookgo/inject](https://github.com/facebookgo/inject) supports creating new private own injected instances by providing special annotation:
+
+~~~ go
+`inject:"private"`
+~~~
+
+In other cases, when no injections are needed, a typical way of creating new instances is advised:
 
 ~~~ go
 // Borrow method is responsible for borrowing book by user.
-func (b *borrowService) Borrow(user shared.User, book shared.Book) {
-	formatter := borrowingformatter.New()
+func (b *BorrowService) Borrow(user shared.User, book shared.Book) {
+	formatter := new(borrowingformatter.BorrowingFormatter)
 	formatted := formatter.Format(user, book)
 
-	b.loggerService.Info(formatted)
+	b.LoggerService.Info(formatted)
 }
 ~~~
 
 Hint: for testing purposes I recommend to prepare a "new instance provider", which can produce any mocked instance we want. The provider pattern is not applied to this project.
 
+### Dependency Graph
+
+Preparing a dependency graph is a piece of cake with [facebookgo/inject](https://github.com/facebookgo/inject). The developer should only define which services will be used in graph population according to chosen intefaces in target structs. The population procedure is presented below:
+
+~~~ go
+func main() {
+	application := new(libraryApplication)
+
+	if error := inject.Populate(
+		application,
+		new(bookservice.BookService),
+		new(borrowservice.BorrowService),
+		new(loggerservice.LoggerService),
+		new(userservice.UserService),
+	); nil != error {
+		log.Fatalf("Error occured while populating graph: %v", error)
+	}
+
+	application.run()
+}
+~~~
