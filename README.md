@@ -17,8 +17,8 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 ## User stories
 
 * There is a library in which a user can borrow a book.
-* The user has name
-* The book has a title
+* The user has name.
+* The book has a title.
 * The user can borrow a book.
 
 ## Design of the solution
@@ -27,47 +27,29 @@ The application has a separated "services" package, which contains only two pack
 
 I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles and makes easier services mocking.
 
-### BookService - single instance
+### BookService - Sample Service
 
-Package: `bookservice`
-
-The initialization part has been separated because of SRP (Single Responsibility Pattern). All initialization operations have been moved to a file called `book_service_init.go`. When a client service requests an instance of `BookService` it should call the `bookservice.Instance()` method. The instance will lazily created if necessary:
+As there can be noticed, a logger service will be injected by the graph population (description below). No constructors, special initialization procedures have been used.
 
 ~~~ go
-var (
-	once     sync.Once
-	instance interfaces.BookService
-)
+package bookservice
 
-func newBookService() interfaces.BookService {
-	return &bookService{
-		loggerService: loggerservice.Instance(),
-	}
+import ...
+
+// BookService allows to create books.
+type BookService struct {
+	LoggerService interfaces.LoggerService `inject:""`
 }
 
-// Instance method returns a singleton instance of BookService.
-func Instance() interfaces.BookService {
-	once.Do(func() {
-		instance = newBookService()
-	})
-	return instance
-}
-~~~
-
-The implementation of `BookService` has been placed in `book_service.go` and contains only business logic and structure representation:
-
-~~~ go
-type bookService struct {
-	loggerService interfaces.LoggerService
-}
-
-func (b *bookService) CreateBook(title string) shared.Book {
-	b.loggerService.Info("New book created: %v", title)
+// CreateBook method is responsible for creating new book.
+func (b *BookService) CreateBook(title string) shared.Book {
+	b.LoggerService.Info("New book created: %v", title)
 	return newBook(title)
 }
+
 ~~~
 
-One may say that having interfaces here forces to write more code. Actually it supports testing, because it allows mocking services:
+If we use interfaces for injections, there will be a possibility to write some tests, including mocking them externally (exported fields).
 
 ~~~ go
 func TestCreateBook(t *testing.T) {
@@ -75,7 +57,7 @@ func TestCreateBook(t *testing.T) {
 
 	// given
 	logger := new(mockedLogger)
-	sut := &bookService{loggerService: logger}
+	sut := &BookService{logger}
 
 	// when
 	sut.CreateBook("book")
