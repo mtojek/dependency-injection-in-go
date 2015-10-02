@@ -5,13 +5,13 @@ import (
 )
 
 type libraryApplication struct {
-	userService   interfaces.UserService
-	bookService   interfaces.BookService
-	borrowService interfaces.BorrowService
+	UserService   interfaces.UserService   `inject:""`
+	BookService   interfaces.BookService   `inject:""`
+	BorrowService interfaces.BorrowService `inject:""`
 }
 
 func (l *libraryApplication) run() {
-	user := l.userService.CreateUser("Marcin Tojek")
-	book := l.bookService.CreateBook("Thinking in Java")
-	l.borrowService.Borrow(user, book)
+	user := l.UserService.CreateUser("Marcin Tojek")
+	book := l.BookService.CreateBook("Thinking in Java")
+	l.BorrowService.Borrow(user, book)
 }
