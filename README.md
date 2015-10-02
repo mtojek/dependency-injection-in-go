@@ -12,7 +12,7 @@ Keywords: dependency injection, inject, injector, DIY
 
 Dependency injection seems to be a key factor while writing a DRY code, especially when a developer does not want to care about passing a service through few layers, always accompanied by a long list of constructor arguments. This boilerplate usually makes the code unreadable and unnecessarily longer than the crucial business logic.
 
-The way I figured this out, is presented in a "proof of concept" simple project. I tried to eliminate as much of not related to DI source code, thus sometimes you may wonder if this simplicity really needs a DI pattern.
+The way I figured this out, is presented in a "proof of concept" simple project. The application bases on a graph provided by [facebookgo/inject](https://github.com/facebookgo/inject), which is responsible for resolving dependencies between services.
 
 ## User stories
 
@@ -25,7 +25,7 @@ The way I figured this out, is presented in a "proof of concept" simple project.
 
 The application has a separated "services" package, which contains only two packages - "implementation" and "interfaces". The first one contains several application services (also organized in packages) like a `BookService`, `BorrowService`, `UserService`, `LoggerService` and `BorrowingFormatter`.
 
-I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles.
+I assume that all mentioned services should be stateless, thus they can be represented by only one instance per service. The separation of interfaces and implementation prevents from problematic dependency cycles and makes easier services mocking.
 
 ### BookService - single instance
 
